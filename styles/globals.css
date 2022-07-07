@@ -1,16 +1,29 @@
-html,
+:root {
+	--bg: #8a9ea0;
+	--fr: #fffaf0;
+	--main: #ffbb40;
+	--mainD: #f2b037;
+	--sec: #897c70;
+}
+
 body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+	background-color: var(--bg);
+	color: var(--fr);
 }
-
-a {
-  color: inherit;
-  text-decoration: none;
+button {
+	cursor: pointer;
+	background-color: var(--main);
+	border-radius: 2vw;
 }
-
-* {
-  box-sizing: border-box;
+button:hover {
+	background-color: var(--mainD);
+}
+.join {
+	font-size: 10rem;
+	border: none;
+	padding: 3vw;
+	margin: 0 auto;
+	position: fixed;
+	left: 50%;
+	transform: translate(-50%, 0);
 }
