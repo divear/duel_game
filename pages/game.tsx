@@ -1,12 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function game() {
-	const canvas: any = useRef(null);
-	const c = canvas.current && canvas.current.getContext("2d");
+	const canvasRef: any = useRef();
+	const canvas = canvasRef.current;
+	const c = canvas && canvas.getContext("2d");
+	const [width, setWidth] = useState(0);
+	const [height, setHeight] = useState(0);
 
 	useEffect(() => {
-		canvas.height = window.innerHeight;
-		canvas.width = window.innerWidth;
+		setHeight(window.innerHeight);
+		setWidth(window.innerWidth);
+		console.log([width, height]);
 	}, []);
 
 	class Player {
@@ -20,13 +24,20 @@ function game() {
 			this.color = color;
 			this.size = size;
 		}
+		draw() {
+			if (!c) return;
+			c.beginPath();
+			c.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+			c.fill();
+		}
 	}
 	const player = new Player(2, 2, "red", 21);
 	console.log(player);
+	player.draw();
 
 	return (
 		<div>
-			<canvas ref={canvas}></canvas>
+			<canvas ref={canvas} width={width} height={height} />
 		</div>
 	);
 }
