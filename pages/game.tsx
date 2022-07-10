@@ -1,74 +1,32 @@
-import React, { useEffect, useRef, useState } from "react";
-let gcanvas;
+import React, { useEffect, useRef } from "react";
 
 function game() {
-	const [score, setScore] = useState("");
-	let Xpos: number;
-	let Ypos: number;
-	let isDown = false;
-	const [lineWidth, setLineWidth] = useState(50);
-	const [color, setColor] = useState("black");
-	const [HEIGHT, setHEIGHT] = useState(0);
-	const [WIDTH, setWIDTH] = useState(0);
+	const canvas: any = useRef(null);
+	const c = canvas.current && canvas.current.getContext("2d");
 
 	useEffect(() => {
-		setHEIGHT(
-			window.innerWidth > 820
-				? window.innerHeight / 1.2
-				: window.innerWidth
-		);
-		setWIDTH(
-			window.innerWidth > 820
-				? window.innerWidth / 1.1
-				: window.innerWidth
-		);
-		onmousedown = function (e) {
-			isDown = true;
-			this.onmousemove = (e) => {
-				if (isDown) {
-					Xpos = e.offsetX;
-					Ypos = e.offsetY;
-				}
+		canvas.height = window.innerHeight;
+		canvas.width = window.innerWidth;
+	}, []);
 
-				this.onmouseup = () => {
-					isDown = false;
-				};
-			};
-		};
-		if (window.innerWidth < 820) {
-			window.ontouchmove = function (e) {
-				console.log(WIDTH);
-
-				Xpos = e.touches[0].clientX;
-				Ypos = e.touches[0].clientY - HEIGHT;
-			};
-		}
-	});
-
-	const canvas: any = useRef(null);
-
-	function Draw() {
-		const c = canvas.current && canvas.current.getContext("2d");
-		gcanvas = canvas.current;
-
-		if (c) {
-			c.fillStyle = color;
-			c.beginPath();
-			c.arc(Xpos, Ypos, lineWidth, 0, 2 * Math.PI);
-			c.fill();
+	class Player {
+		x: Number;
+		y: Number;
+		color: String;
+		size: Number;
+		constructor(x: Number, y: Number, color: String, size: Number) {
+			this.x = x;
+			this.y = y;
+			this.color = color;
+			this.size = size;
 		}
 	}
+	const player = new Player(2, 2, "red", 21);
+	console.log(player);
+
 	return (
 		<div>
-			Score: {score}
-			<canvas
-				id="canvas"
-				onMouseMove={Draw}
-				onTouchMove={Draw}
-				ref={canvas}
-				width={WIDTH}
-				height={HEIGHT}
-			/>
+			<canvas ref={canvas}></canvas>
 		</div>
 	);
 }
