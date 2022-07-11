@@ -1,17 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import Meta from "./components/Meta";
 
 function game() {
-	const canvasRef: any = useRef();
-	const canvas = canvasRef.current;
-	const c = canvas && canvas.getContext("2d");
+	const canvasRef = useRef(null);
 	const [width, setWidth] = useState(0);
 	const [height, setHeight] = useState(0);
-
-	useEffect(() => {
-		setHeight(window.innerHeight);
-		setWidth(window.innerWidth);
-		console.log([width, height]);
-	}, []);
 
 	class Player {
 		x: Number;
@@ -24,20 +17,37 @@ function game() {
 			this.color = color;
 			this.size = size;
 		}
-		draw() {
-			if (!c) return;
+		draw(c: any) {
+			if (typeof window === "undefined") {
+				console.log("iam server lol");
+				return;
+			}
+
+			console.log("draw");
+			console.log(c);
+			c.fillText("Hello World", 10, 50);
 			c.beginPath();
 			c.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
 			c.fill();
 		}
 	}
-	const player = new Player(2, 2, "red", 21);
+	const player = new Player(100, 100, "red", 41);
 	console.log(player);
-	player.draw();
+
+	useEffect(() => {
+		const canvas: any = canvasRef.current;
+		console.log(canvas);
+
+		const c = canvas && canvas.getContext("2d");
+		setHeight(window.innerHeight / 2);
+		setWidth(window.innerWidth / 2);
+		player.draw(c);
+	}, [player]);
 
 	return (
 		<div>
-			<canvas ref={canvas} width={width} height={height} />
+			<Meta title="game" />
+			<canvas ref={canvasRef} width={width} height={height} />
 		</div>
 	);
 }
