@@ -36,13 +36,13 @@ function game() {
 		y: number;
 		color: String;
 		size: number;
-		velocity: number;
+		velocity: { x: number; y: number };
 		constructor(
 			x: number,
 			y: number,
 			color: String,
 			size: number,
-			velocity: number
+			velocity: { x: number; y: number }
 		) {
 			this.x = x;
 			this.y = y;
@@ -60,11 +60,15 @@ function game() {
 			c.fillStyle = this.color;
 			c.fill();
 		}
-		update() {
-			this.x = this.x + this.velocity;
+		update(c: any) {
+			this.draw(c);
+			this.x = this.x + this.velocity.x;
+			this.y = this.y + this.velocity.y;
 		}
 	}
-	const projectile = new Projectile(width / 2, height / 2, "green", 20, 1);
+
+	const projectiles: any = [];
+
 	useEffect(() => {
 		const canvas: any = canvasRef.current;
 
@@ -74,14 +78,27 @@ function game() {
 		player.draw(c);
 
 		addEventListener("click", (e) => {
+			const angle = Math.atan2(
+				e.clientY - height / 2,
+				e.clientX - width / 2
+			);
+			console.log(angle);
+			const velocity = {
+				x: Math.cos(angle),
+				y: Math.sin(angle),
+			};
+
+			projectiles.push(
+				new Projectile(width / 2, height / 2, "green", 5, velocity)
+			);
 			animate();
 		});
 		function animate() {
-			if (projectile.x === 0) return;
-
+			if (projectiles[0] && projectiles[0].x === 0) return;
 			requestAnimationFrame(animate);
-			projectile.draw(c);
-			projectile.update();
+			projectiles.forEach((p: any) => {
+				p.update(c);
+			});
 		}
 	}, [Player, Projectile]);
 
