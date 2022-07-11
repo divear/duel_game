@@ -19,30 +19,68 @@ function game() {
 		}
 		draw(c: any) {
 			if (typeof window === "undefined") {
+				return;
+			}
+
+			c.beginPath();
+			c.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+			c.fillStyle = this.color;
+			c.fill();
+		}
+	}
+	const [x, y] = [width / 2, height / 2];
+	const player = new Player(x, y, "red", 41);
+
+	class Projectile {
+		x: Number;
+		y: Number;
+		color: String;
+		size: Number;
+		velocity: Number;
+		constructor(
+			x: Number,
+			y: Number,
+			color: String,
+			size: Number,
+			velocity: Number
+		) {
+			this.x = x;
+			this.y = y;
+			this.color = color;
+			this.size = size;
+			this.velocity = velocity;
+		}
+		draw(c: any) {
+			if (typeof window === "undefined") {
 				console.log("iam server lol");
 				return;
 			}
 
-			console.log("draw");
-			console.log(c);
-			c.fillText("Hello World", 10, 50);
 			c.beginPath();
 			c.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+			c.fillStyle = this.color;
 			c.fill();
 		}
 	}
-	const player = new Player(100, 100, "red", 41);
-	console.log(player);
-
 	useEffect(() => {
 		const canvas: any = canvasRef.current;
 		console.log(canvas);
 
 		const c = canvas && canvas.getContext("2d");
-		setHeight(window.innerHeight / 2);
-		setWidth(window.innerWidth / 2);
+		setHeight(window.innerHeight - 20);
+		setWidth(window.innerWidth - 20);
 		player.draw(c);
-	}, [player]);
+		addEventListener("click", (e) => {
+			const projectile = new Projectile(
+				e.clientX,
+				e.clientY,
+				"green",
+				20,
+				4
+			);
+			projectile.draw(c);
+		});
+	}, [Player]);
 
 	return (
 		<div>
