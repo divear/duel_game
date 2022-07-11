@@ -7,11 +7,11 @@ function game() {
 	const [height, setHeight] = useState(0);
 
 	class Player {
-		x: Number;
-		y: Number;
+		x: number;
+		y: number;
 		color: String;
-		size: Number;
-		constructor(x: Number, y: Number, color: String, size: Number) {
+		size: number;
+		constructor(x: number, y: number, color: String, size: number) {
 			this.x = x;
 			this.y = y;
 			this.color = color;
@@ -32,17 +32,17 @@ function game() {
 	const player = new Player(x, y, "red", 41);
 
 	class Projectile {
-		x: Number;
-		y: Number;
+		x: number;
+		y: number;
 		color: String;
-		size: Number;
-		velocity: Number;
+		size: number;
+		velocity: number;
 		constructor(
-			x: Number,
-			y: Number,
+			x: number,
+			y: number,
 			color: String,
-			size: Number,
-			velocity: Number
+			size: number,
+			velocity: number
 		) {
 			this.x = x;
 			this.y = y;
@@ -52,7 +52,6 @@ function game() {
 		}
 		draw(c: any) {
 			if (typeof window === "undefined") {
-				console.log("iam server lol");
 				return;
 			}
 
@@ -61,26 +60,30 @@ function game() {
 			c.fillStyle = this.color;
 			c.fill();
 		}
+		update() {
+			this.x = this.x + this.velocity;
+		}
 	}
+	const projectile = new Projectile(width / 2, height / 2, "green", 20, 1);
 	useEffect(() => {
 		const canvas: any = canvasRef.current;
-		console.log(canvas);
 
 		const c = canvas && canvas.getContext("2d");
 		setHeight(window.innerHeight - 20);
 		setWidth(window.innerWidth - 20);
 		player.draw(c);
+
 		addEventListener("click", (e) => {
-			const projectile = new Projectile(
-				e.clientX,
-				e.clientY,
-				"green",
-				20,
-				4
-			);
-			projectile.draw(c);
+			animate();
 		});
-	}, [Player]);
+		function animate() {
+			if (projectile.x === 0) return;
+
+			requestAnimationFrame(animate);
+			projectile.draw(c);
+			projectile.update();
+		}
+	}, [Player, Projectile]);
 
 	return (
 		<div>
