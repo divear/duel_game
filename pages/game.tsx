@@ -96,6 +96,8 @@ function game() {
 		function animate() {
 			if (projectiles[0] && projectiles[0].x === 0) return;
 			requestAnimationFrame(animate);
+			c.clearRect(0, 0, width, height);
+			player.draw(c);
 			projectiles.forEach((p: any) => {
 				p.update(c);
 			});
