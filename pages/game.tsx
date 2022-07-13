@@ -69,7 +69,7 @@ function game() {
 		}
 	}
 
-	const projectiles: any = [];
+	let projectiles: any = [];
 
 	class Enemy {
 		x: number;
@@ -101,14 +101,12 @@ function game() {
 			c.fill();
 		}
 		update(c: any) {
-			if (this.x > 3000 || this.x < 0 || this.y < 0 || this.y > 3000)
-				return;
 			this.draw(c);
 			this.x = this.x + this.velocity.x;
 			this.y = this.y + this.velocity.y;
 		}
 	}
-	const enemies: any = [];
+	let enemies: any = [];
 
 	useEffect(() => {
 		const canvas: any = canvasRef.current;
@@ -118,12 +116,11 @@ function game() {
 		setWidth(window.innerWidth - 20);
 		player.draw(c);
 
-		addEventListener("mousemove", (e) => {
+		addEventListener("click", (e) => {
 			const angle = Math.atan2(
 				e.clientY - height / 2,
 				e.clientX - width / 2
 			);
-			console.log(angle);
 			const velocity = {
 				x: Math.cos(angle),
 				y: Math.sin(angle),
@@ -147,7 +144,6 @@ function game() {
 				}
 
 				const angle = Math.atan2(height / 2 - y, width / 2 - x);
-				console.log(angle);
 				const velocity = {
 					x: Math.cos(angle) / 3,
 					y: Math.sin(angle) / 3,
@@ -158,16 +154,23 @@ function game() {
 		}
 		spawnEnemies();
 		function animate() {
-			if (projectiles[0] && projectiles[0].x === 0) return;
 			requestAnimationFrame(animate);
 			c.clearRect(0, 0, width, height);
 			player.draw(c);
-			projectiles.forEach((p: any) => {
-				p.update(c);
-			});
-			enemies.forEach((p: any) => {
-				p.update(c);
-			});
+			if (projectiles.length < 20) {
+				projectiles.forEach((p: any) => {
+					p.update(c);
+				});
+			} else {
+				projectiles = [];
+			}
+			if (enemies.length < 10) {
+				enemies.forEach((p: any) => {
+					p.update(c);
+				});
+			} else {
+				enemies = [];
+			}
 		}
 	}, [Player, Projectile]);
 
