@@ -149,28 +149,68 @@ function game() {
 					y: Math.sin(angle) / 3,
 				};
 
-				enemies.push(new Enemy(x, y, "red", 20, velocity));
+				enemies.push(
+					new Enemy(
+						x,
+						y,
+						"#" +
+							(0x1000000 + Math.random() * 0xffffff)
+								.toString(16)
+								.substr(1, 6),
+						Math.random() * (100 - 10) + 10,
+						velocity
+					)
+				);
 			}, 1000);
 		}
 		spawnEnemies();
+		let animationId: any;
 		function animate() {
-			requestAnimationFrame(animate);
-			c.clearRect(0, 0, width, height);
+			animationId = requestAnimationFrame(animate);
+			c.fillRect(0, 0, width, height);
 			player.draw(c);
-			if (projectiles.length < 20) {
-				projectiles.forEach((p: any) => {
-					p.update(c);
+			projectiles.forEach((p: any, i: number) => {
+				// remove if out of bounds
+				if (
+					p.x + p.size < 0 ||
+					p.x - p.size > width ||
+					p.y + p.size < 0 ||
+					p.y - p.size > height
+				) {
+					projectiles.splice(i, 1);
+				}
+				p.update(c);
+			});
+			enemies.forEach((e: any, iEn: number) => {
+				e.update(c);
+				const distPlayer = Math.hypot(player.x - e.x, player.y - e.y);
+
+				if (distPlayer - player.size - e.size < 5) {
+					c.fillStyle = "black";
+					c.font = "105px Impact";
+					c.fillText("GAME OVER", width / 2, height / 3);
+					(c.fillStyle =
+						"#" +
+						(0x1000000 + Math.random() * 0xffffff)
+							.toString(16)
+							.substr(1, 6)),
+						Math.random() * (100 - 10) + 10,
+						(c.font = "100px Impact");
+					c.fillText("GAME OVER", width / 2, height / 3);
+
+					cancelAnimationFrame(animationId);
+				}
+
+				projectiles.forEach((p: any, inPr: number) => {
+					const distance = Math.hypot(p.x - e.x, p.y - e.y);
+
+					//delete if enemy gets shot
+					if (distance - p.size - e.size < 5) {
+						enemies.splice(iEn, 1);
+						projectiles.splice(inPr, 1);
+					}
 				});
-			} else {
-				projectiles = [];
-			}
-			if (enemies.length < 10) {
-				enemies.forEach((p: any) => {
-					p.update(c);
-				});
-			} else {
-				enemies = [];
-			}
+			});
 		}
 	}, [Player, Projectile]);
 
