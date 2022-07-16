@@ -29,7 +29,7 @@ function game() {
 		}
 	}
 	const [x, y] = [width / 2, height / 2];
-	const player = new Player(x, y, "teal", 41);
+	const player = new Player(x, y, "white", 15);
 
 	class Projectile {
 		x: number;
@@ -161,12 +161,13 @@ function game() {
 						velocity
 					)
 				);
-			}, 1000);
+			}, 1500);
 		}
 		spawnEnemies();
 		let animationId: any;
 		function animate() {
 			animationId = requestAnimationFrame(animate);
+			c.fillStyle = "rgba(0,0,0,0.15)";
 			c.fillRect(0, 0, width, height);
 			player.draw(c);
 			projectiles.forEach((p: any, i: number) => {
