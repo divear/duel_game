@@ -5,6 +5,7 @@ function game() {
 	const canvasRef = useRef(null);
 	const [width, setWidth] = useState(0);
 	const [height, setHeight] = useState(0);
+	const [score, setScore] = useState(0);
 
 	class Player {
 		x: number;
@@ -169,6 +170,11 @@ function game() {
 			animationId = requestAnimationFrame(animate);
 			c.fillStyle = "rgba(0,0,0,0.15)";
 			c.fillRect(0, 0, width, height);
+
+			c.fillStyle = "black";
+			c.fillRect(200, 100, 100, 110);
+			c.fillStyle = "white";
+			c.fillText(score, 200, 200);
 			player.draw(c);
 			projectiles.forEach((p: any, i: number) => {
 				// remove if out of bounds
@@ -198,10 +204,8 @@ function game() {
 						Math.random() * (100 - 10) + 10,
 						(c.font = "100px Impact");
 					c.fillText("GAME OVER", width / 2, height / 3);
-					console.log(distPlayer - player.size - e.size);
 
 					//location.reload();
-					console.log("FAIL");
 					cancelAnimationFrame(animationId);
 				}
 
@@ -215,6 +219,8 @@ function game() {
 						} else {
 							enemies.splice(iEn, 1);
 							projectiles.splice(inPr, 1);
+							setScore(score + 1);
+							console.log(score);
 						}
 					}
 				});
