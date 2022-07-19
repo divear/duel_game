@@ -122,8 +122,8 @@ function game() {
 				e.clientX - width / 2
 			);
 			const velocity = {
-				x: Math.cos(angle),
-				y: Math.sin(angle),
+				x: Math.cos(angle) * 1.5,
+				y: Math.sin(angle) * 1.5,
 			};
 
 			projectiles.push(
@@ -185,11 +185,11 @@ function game() {
 			enemies.forEach((e: any, iEn: number) => {
 				e.update(c);
 				const distPlayer = Math.hypot(player.x - e.x, player.y - e.y);
+				if (distPlayer === 1 / 3 || distPlayer === (1 / 3) * 2) return;
 
-				if (distPlayer - player.size - e.size < 5) {
-					c.fillStyle = "black";
+				// game over
+				if (Math.abs(distPlayer - player.size - e.size) < 1) {
 					c.font = "105px Impact";
-					c.fillText("GAME OVER", width / 2, height / 3);
 					(c.fillStyle =
 						"#" +
 						(0x1000000 + Math.random() * 0xffffff)
@@ -198,7 +198,10 @@ function game() {
 						Math.random() * (100 - 10) + 10,
 						(c.font = "100px Impact");
 					c.fillText("GAME OVER", width / 2, height / 3);
+					console.log(distPlayer - player.size - e.size);
 
+					//location.reload();
+					console.log("FAIL");
 					cancelAnimationFrame(animationId);
 				}
 
