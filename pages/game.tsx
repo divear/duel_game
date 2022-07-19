@@ -161,7 +161,7 @@ function game() {
 						velocity
 					)
 				);
-			}, 1500);
+			}, 2000);
 		}
 		spawnEnemies();
 		let animationId: any;
@@ -210,8 +210,12 @@ function game() {
 
 					//delete if enemy gets shot
 					if (distance - p.size - e.size < 5) {
-						enemies.splice(iEn, 1);
-						projectiles.splice(inPr, 1);
+						if (e.size > 10) {
+							e.size = e.size / 1.1;
+						} else {
+							enemies.splice(iEn, 1);
+							projectiles.splice(inPr, 1);
+						}
 					}
 				});
 			});
